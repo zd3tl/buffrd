@@ -4,21 +4,26 @@ import "context"
 
 // bootConfig 从配置文件启动，提供初始配置
 type bootConfig struct {
+	// Engine 仅支持mysql，先解决自己的问题
 	Engine string `yaml:"engine"`
+
+	// DSN 参考https://github.com/go-sql-driver/mysql
+	// 例如：user:password@/dbname
+	DSN string `yaml:"dsn"`
 }
 
-// 内部配置中心，
-type ConfigCenter interface {
-	PartitionConfig(ctx context.Context) *partitionConfig
+func loadBootConfig(ctx context.Context, cfgPath string) error {
+
+}
+
+// configCenter 内部配置中心，
+type configCenter interface {
+	getPartitioner(ctx context.Context, domain string) (Partitioner, error)
 }
 
 type config struct {
 	Id   int    `json:"id"`
 	Data string `json:"data"`
-}
-
-func loadConfig(ctx context.Context) error {
-
 }
 
 // partitionConfig 从存储engine读取配置后形成的配置，给到路由主逻辑
@@ -29,5 +34,5 @@ type partitionConfig struct {
 	domain string
 
 	// partitioner 根据message得到partition
-	partitioner partitioner
+	partitioner Partitioner
 }
