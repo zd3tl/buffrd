@@ -15,6 +15,8 @@ type partitioner interface {
 	partition(ctx context.Context, key string) (*partition, error)
 }
 type mysqlHashPartitioner struct {
+	db    string
+	table string
 }
 
 // partition
